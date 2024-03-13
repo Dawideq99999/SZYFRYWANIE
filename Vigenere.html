@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Vigenere's Code</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eaeaea;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #container {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .div1 {
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .input1 {
+            width: 80%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        #key {
+            width: 80%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .button {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        #btn-encrypt {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #btn-decrypt {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        #btn-move {
+            background-color: #f0ad4e;
+            color: white;
+        }
+
+        #btn-clear {
+            background-color: #d9534f;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="div-left">
+            <div class="div1">
+                <input type="text" placeholder="Słowo" class="input1" id="word1"><br />
+                <input type="text" disabled placeholder="Zaszyfrowane" class="input1" id="result1">
+            </div>
+            <div class="div1">
+                <input type="text" placeholder="Słowo" class="input1" id="word2"><br />
+                <input type="text" disabled placeholder="Odszyfrowane" class="input1" id="result2">
+            </div>
+        </div>
+        <div id="div-right">
+            <div class="div1">
+                <input type="text" id="key" placeholder="Klucz"><br />
+                <input type="button" onclick="Encrypt()" value="Zaszyfruj" id="btn-encrypt">
+                <input type="button" onclick="Decrypt()" value="Odszyfruj" id="btn-decrypt">
+                <input type="button" onclick="MoveDown()" value="Przenieś" id="btn-move">
+            </div>
+            <div class="div1">
+                <input type="button" value="Wyczyść" onclick="Clear()" id="btn-clear">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let abc =["a","ą","b","c","ć","d","e","ę","f","g","h","i","j","k","l","ł","m","n","ń","o","ó","p","q","r","s","ś","t","u","v","w","x","y","z","ż","ź"];
+
+        function Encrypt(){
+            let text = document.getElementById("word1").value.toLowerCase();
+            let key = document.getElementById("key").value.toLowerCase();
+            let encryptedText = "";
+            let keyIndex = 0;
+
+            for (let i = 0; i < text.length; i++) {
+                if (abc.includes(text[i])) {
+                    let textIndex = abc.indexOf(text[i]);
+                    let keyCharIndex = abc.indexOf(key[keyIndex % key.length]);
+                    encryptedText += abc[(textIndex + keyCharIndex) % abc.length];
+                    keyIndex++;
+                } else {
+                    encryptedText += text[i];
+                }
+            }
+            document.getElementById("result1").value = encryptedText;
+        }
+
+        function Decrypt(){
+            let text = document.getElementById("word2").value.toLowerCase();
+            let key = document.getElementById("key").value.toLowerCase();
+            let decryptedText = "";
+            let keyIndex = 0;
+
+            for (let i = 0; i < text.length; i++) {
+                if (abc.includes(text[i])) {
+                    let textIndex = abc.indexOf(text[i]);
+                    let keyCharIndex = abc.indexOf(key[keyIndex % key.length]);
+                    decryptedText += abc[(textIndex - keyCharIndex + abc.length) % abc.length];
+                    keyIndex++;
+                } else {
+                    decryptedText += text[i];
+                }
+            }
+            document.getElementById("result2").value = decryptedText;
+        }
+
+        function MoveDown(){
+            let word = document.getElementById("result1").value;
+            document.getElementById("word2").value = word;
+        }
+
+        function Clear(){
+            document.getElementById("word1").value = "";
+            document.getElementById("result1").value = "";
+            document.getElementById("word2").value = "";
+            document.getElementById("result2").value = "";
+        }
+    </script>
+</body>
+</html>
