@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Szyfr Homofoniczny</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eaecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .input-text, .output-text {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        .button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            opacity: 0.8;
+        }
+
+        .button-clear {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .button:not(.button-clear) {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="inputText" class="input-text" placeholder="Wpisz tekst do szyfrowania lub deszyfrowania">
+        <button onclick="encryptText()" class="button">Szyfruj</button>
+        <button onclick="decryptText()" class="button">Deszyfruj</button>
+        <textarea id="outputText" class="output-text" placeholder="Tekst wynikowy" readonly></textarea>
+        <button onclick="clearText()" class="button button-clear">Wyczyść</button>
+        <button onclick="exportText()" class="button">Eksportuj Wynik</button>
+    </div>
+
+    <script>
+        const homophonicMap = {
+            'a': ['9'],
+            'ą': ['1'],
+            'b': ['1'],
+            'c': ['4'],
+            'ć': ['1'],
+            'd': ['3'],
+            'e': ['8'],
+            'ę': ['1'],
+            'f': ['1'],
+            'g': ['1'],
+            'h': ['1'],
+            'i': ['8'],
+            'j': ['2'],
+            'k': ['4'],
+            'l': ['2'],
+            'ł': ['2'],
+            'm': ['3'],
+            'n': ['6'],
+            'ń': ['1'],
+            'o': ['8'],
+            'ó': ['1'],
+            'p': ['1'],
+            'q': ['1'],
+            'r': ['5'],
+            's': ['4'],
+            'ś': ['1'],
+            't': ['4'],
+            'u': ['3'],
+            'v': ['1'],
+            'w': ['5'],
+            'x': ['1'],
+            'y': ['4'],
+            'z': ['6'],
+            'ź': ['1'],
+            'ż': ['1'],
+        };
+
+        function encryptHomophonic(text) {
+            let encryptedText = '';
+            for (let char of text.toLowerCase()) {
+                if (homophonicMap[char]) {
+                    let codes = homophonicMap[char];
+                    encryptedText += codes[Math.floor(Math.random() * codes.length)] + ' ';
+                } else {
+                    encryptedText += char + ' ';
+                }
+            }
+            return encryptedText;
+        }
+
+        function decryptHomophonic(encryptedText) {
+            let possibleDecryptions = [''];
+            let encryptedSymbols = encryptedText.split(' ');
+
+            for (let symbol of encryptedSymbols) {
+                let newDecryptions = [];
+                for (let decryption of possibleDecryptions) {
+                    let foundKeys = Object.keys(homophonicMap).filter(key => homophonicMap[key].includes(symbol));
+                    if (foundKeys.length > 0) {
+                        for (let key of foundKeys) {
+                            newDecryptions.push(decryption + key);
+                        }
+                    } else {
+                        newDecryptions.push(decryption + symbol);
+                    }
+                }
+                possibleDecryptions = newDecryptions;
+            }
+
+            return possibleDecryptions.join('\n');
+        }
+
+        function encryptText() {
+            const inputText = document.getElementById('inputText').value;
+            const encrypted = encryptHomophonic(inputText);
+            document.getElementById('outputText').value = encrypted;
+        }
+
+        function decryptText() {
+            const encryptedText = document.getElementById('inputText').value;
+            const decrypted = decryptHomophonic(encryptedText);
+            document.getElementById('outputText').value = decrypted;
+        }
+
+        function clearText() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+        }
+
+        function exportText() {
+            const textToExport = document.getElementById('outputText').value;
+            const blob = new Blob([textToExport], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'encryptedText.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
