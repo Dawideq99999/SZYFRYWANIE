@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Caesar's Code</title>
+    <style>
+        body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+    }
+
+    #container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 800px;
+        margin: 50px auto;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #div-left, #div-right {
+        width: 50%;
+        padding: 20px;
+        float:left;
+        box-sizing: border-box;
+    }
+
+    .div1 {
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        height: 200px;
+        text-align: center;
+        padding: 30px;
+        margin-bottom: 10px;
+    }
+
+    .input1 {
+        margin-top: 10px;
+        width: 80%;
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    #n1 {
+        margin-top: 10px;
+        width: 80%;
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    #btn-encrypt, #btn-decrypt, #btn-move, #btn-clear {
+        width: 60%;
+        padding: 6px;
+        font-size: 10px;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #btn-encrypt:hover, #btn-decrypt:hover, #btn-move:hover {
+        background-color: #4CAF50; /* Green */
+        color: white;
+    }
+
+    #btn-clear {
+        background-color: #ff4d4d;
+        color: #fff;
+    }
+
+    #btn-clear:hover {
+        background-color: #cc0000;
+    }
+    </style>
+</head>
+<body>
+    <div id="div-left">
+    <div class="div1">
+        <input type="text" placeholder="Word" class="input1" id="word1"><br />
+        <input type="text" disabled placeholder="Encrypted" class="input1" id="result1">
+    </div>
+    <div class="div1">
+        <input type="text" placeholder="Word" class="input1" id="word2"><br />
+        <input type="text" disabled placeholder="Decrypted" class="input1" id="result2">
+    </div>
+    </div>
+    <div id="div-right">
+        <div class="div1">
+        <input type="number" max="35" id="n1" placeholder="Shift"><br />
+        <input type="button" onclick="Encrypt()" value="Encrypt" id="btn-encrypt">
+        <input type="button" onclick="Decrypt()" value="Decrypt" id="btn-decrypt">
+        <input type="button" onclick="MoveDown()" value="Move Down" id="btn-move">
+        </div>
+        <div class="div1">
+            <input type="button" value="Clear" onclick="Clear()" id="btn-clear">
+        </div>
+    </div>
+    <script>
+        let abc =["a","ą","b","c","ć","d","e","ę","f","g","h","i","j","k","l","ł","m","n","ń","o","ó","p","q","r","s","ś","t","u","v","w","x","y","z","ż","ź"];
+        let newWord="";
+        let x="";
+        function Encrypt(){
+            let word = document.getElementById("word1").value;
+            if (/\d/.test(word)) {
+                alert("Błąd! Nie wolno wprowadzać liczb.");
+                return;
+            }
+            let word1 = word.replace(/ /g,"");
+            let word3 = word1.toLowerCase();
+            let word2= word3.split("");
+            let number = document.getElementById("n1").value;
+            if(number == ""){
+                number=3;
+            }
+            number = parseInt(number);
+            x= parseInt(x);
+            
+            for(i=0;i<word2.length;i++){
+                x = abc.indexOf(word2[i]);
+                console.log(x);
+                newWord+=abc[x+number];
+            }
+            console.log(newWord);
+            document.getElementById("result1").value=newWord;
+            newWord="";
+        }
+        function Decrypt(){
+            let word = document.getElementById("word2").value;
+            if (/\d/.test(word)) {
+                alert("Błąd! Nie wolno wprowadzać liczb.");
+                return;
+            }
+            let word2 = word.toLowerCase();
+            let word1 = word2.split("");
+            console.log(word1);
+            let number = document.getElementById("n1").value;
+            if(number == ""){
+                number=3;
+            }
+            number = parseInt(number);
+            x= parseInt(x);
+            for(i=0;i<word1.length;i++){
+                x = abc.indexOf(word1[i]);
+                console.log(x);
+                newWord+=abc[x-number];
+            }
+            console.log(newWord);
+            document.getElementById("result2").value=newWord;
+            newWord="";
+        }
+        function MoveDown(){
+            let word = document.getElementById("result1").value;
+            document.getElementById("word2").value=word;
+        }
+        function Clear(){
+            document.getElementById("result1").value="";
+            document.getElementById("result2").value="";
+        }
+    </script>
+</body>
+</html>
